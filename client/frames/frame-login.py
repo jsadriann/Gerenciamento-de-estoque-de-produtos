@@ -17,8 +17,10 @@ login.pack(padx=pad, pady=pad)
 password = customtkinter.CTkEntry(frame_login,placeholder_text="Sua senha",show="*")
 password.pack(padx=pad, pady=pad)
 
-login_remember = customtkinter.CTkCheckBox(frame_login,)
+login_remember = customtkinter.CTkCheckBox(frame_login,text="lembrar login")
+login_remember.pack(padx=pad, pady=pad)
 
 button_login = customtkinter.CTkButton(frame_login,text="Login",command=button_login_click)
 button_login.pack(padx=pad, pady=pad)
+
 frame_login.mainloop()
