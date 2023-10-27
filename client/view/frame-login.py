@@ -82,7 +82,6 @@ class Frame_login(ctk.CTk):
         self.buttom_login = ctk.CTkButton(self.frame_login,width=300,text="Login".upper(),font=("Abril Fatface",15),corner_radius=15,command=button_login)
         self.buttom_login.grid(row=4, column=0, padx=10,pady=10)
 
-
     
 if __name__=="__main__":
     frame_login = Frame_login()
