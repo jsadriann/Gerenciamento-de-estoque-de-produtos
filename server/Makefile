@@ -3,13 +3,21 @@
 CC=g++
 CFLAGS=-c -Wall -g
 LDFLAGS=-lpq
-
+OBJS = main.o login.o estoque.o
 all: main
 
-main: main.o
-	$(CC) main.o $(LDFLAGS) -o main -std=c++11
+main: $(OBJS)
+	$(CC) $(OBJS) $(LDFLAGS) -o main -std=c++11
+
 main.o: controller/main.cpp
 	$(CC) $(CFLAGS) controller/main.cpp -o main.o
 
+login.o: model/login.cpp
+	$(CC) $(CFLAGS) model/login.cpp -o login.o
+
+estoque.o: model/estoque.cpp
+	$(CC) $(CFLAGS) model/estoque.cpp -o estoque.o
+
 clean:
 	rm -f *.o main
+

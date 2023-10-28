@@ -1,21 +1,29 @@
 #include "login.h"
 
 // Definição do construtor
-MinhaClasse::MinhaClasse() {
+Login::Login() {
     
-    login = "";
-    senha = "";
+    login="";
+    senha="";
 }
 
-MinhaClasse::MinhaClasse(string a, string b) {
-    login = a;
-    senha = b;
+Login::Login(string a, string b) {
+    setLogin(a);
+    setSenha(b);
 }
 
-string MinhaClasse::getLogin(){
+string Login::getLogin(){
     return senha;
 }
 
-string MinhaClasse::getSenha(){
+string Login::getSenha(){
     return login;
+}
+
+void Login::setLogin(string login){
+    this->login = login;
+}
+
+void Login::setSenha(string senha){
+    this->senha = senha;
 }
