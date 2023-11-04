@@ -25,15 +25,12 @@
 # button_login.place(x=125, y = 180)
 
 # frame_login.mainloop()
+from client.view.mainaux import button_login
 
 import customtkinter as ctk
-from tkinter import PhotoImage
 from PIL import Image
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
-
-def button_login():
-    print("botão login")
 
 class Frame_login(ctk.CTk):
     def __init__(self):
@@ -81,9 +78,4 @@ class Frame_login(ctk.CTk):
 
         self.buttom_login = ctk.CTkButton(self.frame_login,width=300,text="Login".upper(),font=("Abril Fatface",15),corner_radius=15,command=button_login)
         self.buttom_login.grid(row=4, column=0, padx=10,pady=10)
-
-    
-if __name__=="__main__":
-    frame_login = Frame_login()
-    frame_login.mainloop()
 

@@ -1,23 +1,42 @@
 #compilação do projeto
+# Makefile para compilar o projeto
 
-CC=g++
-CFLAGS=-c -Wall -g
+# Compilador
+CXX = g++
+
+# Flags do compilador
+CXXFLAGS = -std=c++11 -Wall
 LDFLAGS=-lpq
-OBJS = main.o login.o estoque.o
-all: main
+# Diretório de saída para os binários
+BUILD_DIR = build
 
-main: $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o main -std=c++11
+# Nome do executável
+TARGET = server
 
-main.o: controller/main.cpp
-	$(CC) $(CFLAGS) controller/main.cpp -o main.o
+# Lista de todos os arquivos-fonte
+SRCS = server.cpp despaxante.cpp message.cpp login.cpp
 
-login.o: model/login.cpp
-	$(CC) $(CFLAGS) model/login.cpp -o login.o
+# Gere os nomes dos arquivos-objetos
+OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
-estoque.o: model/estoque.cpp
-	$(CC) $(CFLAGS) model/estoque.cpp -o estoque.o
+# Alvo padrão
+all: $(BUILD_DIR)/$(TARGET)
 
+# Regra de construção do executável
+$(BUILD_DIR)/$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+
+# Regra de construção dos arquivos-objetos
+$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Cria o diretório de saída, se ele não existir
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+# Limpar arquivos temporários e o executável
 clean:
-	rm -f *.o main
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all clean
 
