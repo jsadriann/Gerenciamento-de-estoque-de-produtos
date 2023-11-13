@@ -8,11 +8,13 @@ using json = nlohmann::json;
 class Message {
 public:
     Message();  // Construtor
-    Message(string,string,string);
+    Message(int,int,string,string,string);
     string to_json();
     string from_json();
 
 private:
+    int    id;
+    int    status;
     string objref;
     string operation;
     string args;

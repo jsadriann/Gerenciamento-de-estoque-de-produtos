@@ -5,14 +5,23 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "despaxante.h"
-
+#include "database.h"
+int id = 0;
 int main() {
+    // PGconn     *conn;
+
+    // conn = connectDB();
+    // if(statusDB(conn) == CONNECTION_OK){
+    //     printf("conectou\n");
+    //     closeDB(conn);
+    // }
+
     int server_socket;
     char buffer[1024];
     struct sockaddr_in server_address, client_address;
     socklen_t addr_size = sizeof(client_address);
 
-    // Crie o socket UDP
+    // Criar o socket UDP
     server_socket = socket(AF_INET, SOCK_DGRAM, 0);
 
     if (server_socket < 0) {
@@ -38,8 +47,8 @@ int main() {
         //     perror("Erro ao receber dados");
         //     return 1;
         // }
+        
         // Processar os dados recebidos
-
         std::string received_data(buffer, recv_size);
         // try {
         //     json received_json = json::parse(received_data);
@@ -62,7 +71,7 @@ int main() {
         // }
 
         // Responder ao cliente (opcional)
-        std::string response = do_operation(received_data);
+        std::string response = do_operation(received_data,id++);
         sendto(server_socket, response.c_str(), response.length(), 0, (struct sockaddr*)&client_address, addr_size);
     }
     

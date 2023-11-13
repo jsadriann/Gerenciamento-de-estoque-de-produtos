@@ -14,7 +14,7 @@ BUILD_DIR = build
 TARGET = server
 
 # Lista de todos os arquivos-fonte
-SRCS = server.cpp despaxante.cpp message.cpp login.cpp
+SRCS = server.cpp despaxante.cpp message.cpp login.cpp database.cpp
 
 # Gere os nomes dos arquivos-objetos
 OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
@@ -24,7 +24,7 @@ all: $(BUILD_DIR)/$(TARGET)
 
 # Regra de construção do executável
 $(BUILD_DIR)/$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Regra de construção dos arquivos-objetos
 $(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)

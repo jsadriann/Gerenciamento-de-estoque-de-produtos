@@ -1,29 +1,12 @@
 import socket
 import json
-
-# class Produto:
-#     def __init__(self,id,name,qtd,value,description,distribut):
-#         self.id = id
-#         self.name = name
-#         self.qtd = qtd
-#         self.value = value
-#         self.description = description
-#         self.distribut = distribut
-    
-#     def Vende_Produto(self,qtd):
-#         algo
-#     def Compra_Produto(self,qtd):
-#         algo
-#     def Print_produto(self):
-#         algo
-#     def Altera_Distribut(self):
-#         algo
+i = 0
 def from_json(json_string):
     message_dict = json.loads(json_string)
     return message_dict
     
-def do_operation(objref,operation,args):
-    message = Message.create_message(objref,operation,args)
+def do_operation(req,objref,operation,args):
+    message = Message.create_message(req,0,objref,operation,args)
     packet = message.to_json()
     a =""
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as proxy_socket:
@@ -35,17 +18,21 @@ def do_operation(objref,operation,args):
     return a
 
 class Message:
-    def __init__(self, objref, operation, args):
+    def __init__(self,a,status, objref, operation, args):
+        self.id = a
+        self.status = status
         self.objref = objref
         self.operation = operation
         self.args = args
 
     @classmethod
-    def create_message(cls, objref, operation, args):
-        return cls(objref, operation, args)
+    def create_message(cls,id,status, objref, operation, args):
+        return cls(id,status,objref, operation, args)
 
     def to_json(self):
         message_dict = {
+            "id": self.id,
+            "status": self.status,
             "objref": self.objref,
             "operation": self.operation,
             "args": json.dumps(self.args)
@@ -59,14 +46,29 @@ class Login:
         self.user = user
         self.password = password
     
-    def efetua_login(self):
-        packet = do_operation("Login","check_login",self.__dict__)
+    def efetua_login(self,req):
+        packet = do_operation(req,"Login","check_login",self.__dict__)
         a = from_json(packet)
-        print(a)
 
         return a['args']
 
+def remove_Login(usuario,req):
+    pack = Login(usuario,"")
+    packet = do_operation(req,"Login","remove_login",pack.__dict__)
+    a = from_json(packet)
+    if a['args'] == "-1":
+        print("Verifique o nome do usuario e tente novamente\n")
+    else:
+        print("usuario removido com sucesso\n")
 
+def add_Login(usuario,senha,req):
+    pack = Login(usuario,senha)
+    packet = do_operation(req,"Login","add_login",pack.__dict__)
+    a = from_json(packet)
+    if a['args'] == "-1":
+        print("usuario existente\n")
+    else:
+        print("usuario cadastrado com sucesso\n")
 
 
 

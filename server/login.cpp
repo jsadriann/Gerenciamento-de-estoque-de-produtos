@@ -1,10 +1,9 @@
 #include "login.h"
-
+#include "database.h"
 // Definição do construtor
 Login::Login() {
     
-    login="";
-    senha="";
+
 }
 
 Login::Login(string a, string b) {
@@ -13,11 +12,11 @@ Login::Login(string a, string b) {
 }
 
 string Login::getLogin(){
-    return senha;
+    return login;
 }
 
 string Login::getSenha(){
-    return login;
+    return senha;
 }
 
 void Login::setLogin(string login){
@@ -29,12 +28,54 @@ void Login::setSenha(string senha){
 }
 
 int Login::verificaLogin(){
-    if((login.compare("admin") == 0) && (senha.compare("admin") == 0))
-        return 0;
-    else if((login.compare("admin") == 0) && (senha.compare("admin") != 0))
-        return 1;
-    else if((login.compare("admin") != 0) && (senha.compare("admin") == 0))
+    int ret;
+    PGconn *database = connectDB();
+    string aux = "SELECT * FROM Login where users='"+getLogin()+"'";
+    const char *query = aux.c_str();
+    PGresult *result = consultDB(database,query);
+    if(countTupleDB(result) == 0)
         return 2;
+    string a = getValueDB(result,0,"users");
+    string b = getValueDB(result,0,"password");
+    
+    if((login.compare(a) == 0) && (senha.compare(b) == 0))
+        ret = 0;
+    else if((login.compare(a) == 0) && (senha.compare(b) != 0))
+        ret = 1;
     else 
-        return 3;
+        ret = 2;
+    clearDB(result);
+    closeDB(database);
+    return ret;
+}
+
+int add_login(string user,string password){
+    PGconn *database = connectDB();
+    string aux = "INSERT INTO login(users,password) VALUES('"+user+"',"+"'"+password+"')";
+    const char *query = aux.c_str();
+    PGresult *result = consultDB(database,query);
+    if (PQresultStatus(result) != PGRES_COMMAND_OK) {
+        PQclear(result);
+        PQfinish(database);
+        return -1;
+    }
+    PQclear(result);
+    PQfinish(database);
+    return 1;
+
+}
+
+int remove_login(string user){
+    PGconn *database = connectDB();
+    string aux = "DELETE FROM login WHERE users ='"+user+"'";
+    const char *query = aux.c_str();
+    PGresult *result = consultDB(database,query);
+    if (atoi(PQcmdTuples(result)) == 0){
+        PQclear(result);
+        PQfinish(database);
+        return -1;
+    }
+    PQclear(result);
+    PQfinish(database);
+    return 1;
 }

@@ -7,6 +7,6 @@
 #include "message.h"
 using namespace std;
 
-std::string do_operation(std::string);
+std::string do_operation(std::string,int);
 
 #endif

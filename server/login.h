@@ -18,4 +18,6 @@ private:
     void setSenha(string);
 };
 
+int add_login(string,string);
+int remove_login(string);
 #endif

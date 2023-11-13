@@ -1,8 +1,10 @@
 #include "despaxante.h"
 
 using json = nlohmann::json;
-std::string do_operation(std::string pacote){
+
+std::string do_operation(std::string pacote,int idr){
     Message message;
+    std::cout << pacote << std::endl;
     json received_json = json::parse(pacote);
     std::string a = received_json["args"];
     json args = json::parse(a);
@@ -17,7 +19,17 @@ std::string do_operation(std::string pacote){
         if(operation.compare("check_login") == 0){
             int req = login.verificaLogin();
             std::string resp = to_string(req);
-            message = Message("Login","check_login",resp);
+            message = Message(idr,1,"Login","check_login",resp);
+            packet = message.to_json();
+        }else if(operation.compare("add_login") == 0){
+            int req = add_login(user,password);
+            std::string resp = to_string(req);
+            message = Message(idr,1,"Login","add_login",resp);
+            packet = message.to_json();
+        }else if(operation.compare("remove_login") == 0){
+            int req = remove_login(user);
+            std::string resp = to_string(req);
+            message = Message(idr,1,"Login","remove_login",resp);
             packet = message.to_json();
         }
         
