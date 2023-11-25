@@ -1,8 +1,8 @@
 #include "login.h"
 #include "database.h"
+extern std::unordered_map<std::string, std::function<int(Login&)>> loginMethodMap;
 // Definição do construtor
 Login::Login() {
-    
 
 }
 

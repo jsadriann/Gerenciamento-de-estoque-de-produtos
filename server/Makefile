@@ -5,7 +5,7 @@
 CXX = g++
 
 # Flags do compilador
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++17 -Wall
 LDFLAGS=-lpq
 # Diretório de saída para os binários
 BUILD_DIR = build
@@ -14,7 +14,7 @@ BUILD_DIR = build
 TARGET = server
 
 # Lista de todos os arquivos-fonte
-SRCS = server.cpp despaxante.cpp message.cpp login.cpp database.cpp
+SRCS = server.cpp despaxante.cpp skeleton.cpp message.cpp login.cpp fornecedor.cpp database.cpp produto.cpp
 
 # Gere os nomes dos arquivos-objetos
 OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))

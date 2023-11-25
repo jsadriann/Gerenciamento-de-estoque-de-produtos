@@ -7,14 +7,9 @@
 #include "despaxante.h"
 #include "database.h"
 int id = 0;
+int id_client = -1;
+string pacote;
 int main() {
-    // PGconn     *conn;
-
-    // conn = connectDB();
-    // if(statusDB(conn) == CONNECTION_OK){
-    //     printf("conectou\n");
-    //     closeDB(conn);
-    // }
 
     int server_socket;
     char buffer[1024];
@@ -43,36 +38,18 @@ int main() {
 
         int recv_size = recvfrom(server_socket, buffer, sizeof(buffer), 0, (struct sockaddr*)&client_address, &addr_size);
 
-        // if (recv_size < 0) {
-        //     perror("Erro ao receber dados");
-        //     return 1;
-        // }
-        
         // Processar os dados recebidos
         std::string received_data(buffer, recv_size);
-        // try {
-        //     json received_json = json::parse(received_data);
-        //     std::string a = received_json["args"];
-        //     json args = json::parse(a);
-
-        // // Acesse os campos do JSON
-        //     if (received_json.find("objref") != received_json.end()) {
-        //         std::string obj = received_json["objref"];
-        //         std::string oper = received_json["operation"];
-        //         std::string user = args["user"];
-        //         std::string passw = args["password"];
-        //         std::cout << "objeto recebido: " << obj << std::endl;
-        //         std::cout << "operação recebido: " << oper << std::endl;
-        //         std::cout << "user recebido: " << user << std::endl;
-        //         std::cout << "senha recebido: " << passw << std::endl;
-        //     }
-        // } catch (const json::parse_error& e) {
-        //     std::cerr << "Erro ao analisar a mensagem JSON: " << e.what() << std::endl;
-        // }
 
         // Responder ao cliente (opcional)
-        std::string response = do_operation(received_data,id++);
-        sendto(server_socket, response.c_str(), response.length(), 0, (struct sockaddr*)&client_address, addr_size);
+        if(package_id(received_data) == id_client){
+            sendto(server_socket, pacote.c_str(), pacote.length(), 0, (struct sockaddr*)&client_address, addr_size);
+
+        }else{
+            id_client = package_id(received_data);
+            pacote = do_operation(received_data,id++);
+            sendto(server_socket, pacote.c_str(), pacote.length(), 0, (struct sockaddr*)&client_address, addr_size);
+        }
     }
     
     // Feche o socket do servidor (isso não será alcançado neste exemplo

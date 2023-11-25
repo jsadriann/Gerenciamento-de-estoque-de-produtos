@@ -3,10 +3,13 @@
 #include <iostream>
 #include <string>
 #include <nlohmann/json.hpp>
-#include "login.h"
-#include "message.h"
+
 using namespace std;
 
-std::string do_operation(std::string,int);
+string do_operation(string,int);
+int package_id(string);
+
+// Defina o mapeamento para os métodos
+
 
 #endif
