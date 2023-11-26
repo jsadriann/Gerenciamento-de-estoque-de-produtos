@@ -1,4 +1,5 @@
 import proxy as px
+import vendas_app as vendas
 import os
 import sys
 import time
@@ -21,48 +22,41 @@ def exec():
             name = input("Nome do produto: ")
             description = input("Descrição: ")
             fornecedor = input("Fornecedor: ")
-            dataval = input("Data de Validade: ")
-            datafab = input("Data de fabricação: ")
+            datafab = input("Data Fab(a-m-d)(xxxx-xx-xx): ")
+            dataval = input("Data Val(a-m-d)(xxxx-xx-xx): ")
             qtd = input("quantidade: ")
             value = input("valor por unidade: ")
             produto = px.Produto(name,description,fornecedor,dataval,datafab,qtd,value)
-            ret = produto.AdicionaProduto(increment())
-            if(ret == "0"):
-                print("Sentimos muito, mais houve algum \nproblema com a inclusão do produto")
-                time.sleep(3)
-            elif (ret == "1"):
-                print("Produto adicionado com sucesso")
-                time.sleep(2)
+            produto.AdicionaProduto(increment())
             limpar()
         elif opc == "2":
             break
         elif opc == "3":
-            break
+            vendas.exec()
+            limpar()
         elif opc == "4":
             break
         elif opc == "5":
             nome = input("Nome do Fornecedor: ")
             fornecedor = px.Fornecedor(0,nome)
             ret = fornecedor.AdicionaFornecedor(increment())
-            if(ret == "0"):
-                print("Sentimos muito, mais houve algum \nproblema com a inclusão do produto")
+            if(ret == "-1"):
+                print("Fornecedor já existe")
                 time.sleep(3)
             elif (ret == "1"):
-                print("Produto adicionado com sucesso")
+                print("Fornecedor adicionado com sucesso")
                 time.sleep(2)
+            limpar()
         elif opc == "6":
             nome = input("Nome do Fornecedor: ")
             fornecedor = px.Fornecedor(0,nome)
             ret = fornecedor.RemoveFornecedor(increment())
-            if(ret == "-1"):
-                print("Sentimos muito, mais houve algum \nproblema com o servidor, tente novamente")
-                time.sleep(3)
-            elif (ret == "0"):
-                print("Fornecedor não encontrado")
-                time.sleep(2)
+            if(ret == "0"):
+                print("Fornecedor Existente")
             elif (ret == "1"):
                 print("Fornecedor removido com sucesso")
-                time.sleep(2)
+            time.sleep(2)
+            limpar()
         elif opc == "7":
             limpar()
             px.ListaFornecedor(increment())
@@ -70,3 +64,7 @@ def exec():
             break
         elif opc == "9":
             break
+        else:
+            print("Opção inválida")
+            time.sleep(1)
+            limpar()

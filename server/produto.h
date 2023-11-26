@@ -34,7 +34,7 @@ public:
     int AlteraDescription(string);
     int AlteraFornecedor(string);
     int AdicionaProduto();
-    vector<Estoque> ListaEstoque();
+    vector<Estoque> ListaEstoque(string);
     json to_json();
     void from_json(json&, Estoque&);
 

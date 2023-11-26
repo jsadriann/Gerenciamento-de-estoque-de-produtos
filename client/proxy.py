@@ -1,11 +1,31 @@
 import socket
 import json
+import time
 i = 0
 def imprimir_fornecedor(objeto):
     if isinstance(objeto, str):
         objeto = json.loads(objeto)
     print("ID:", objeto["id"])
     print("Nome:", objeto["nome"])
+    print("----------------------------------------")
+
+def imprimir_sub_produto(objeto):
+    if isinstance(objeto, str):
+        objeto = json.loads(objeto)
+    print("ID:", objeto["id"])
+    print("Nome:", objeto["name"])
+    print("Quantidade:", objeto["qtd"])
+    print("Valor:", objeto["value"])
+    print("----------------------------------------")
+
+def imprimir_vendas(objeto):
+    if isinstance(objeto, str):
+        objeto = json.loads(objeto)
+    print("ID:", objeto["id"])
+    print("Produto:", objeto["produto"])
+    print("Quantidade:", objeto["qtd"])
+    print("Valor:", objeto["valor"])
+    print("Data:", objeto["data"])
     print("----------------------------------------")
 
 def imprimir_produto(objeto):
@@ -126,11 +146,17 @@ class Produto:
             return -1
         
         a = from_json(packet)
-        print(a)
-        if a['args'] == "-1":
-            print("Não foi possível encontrar esse\nfornecedor")
 
-        return a['args']
+        if(a['args'] == "0"):
+            print("Sentimos muito, mais houve algum \nproblema com a inclusão do produto")
+            time.sleep(3)
+        elif (a['args'] == "1"):
+            print("Produto adicionado com sucesso")
+            time.sleep(2)
+        elif (a['args'] == "-1"):
+            print("Fornecedor não encontrado")
+            time.sleep(2)
+
     
 def ListaEstoque(req):
     packet = do_operation(req,"Estoque","ListaEstoque","")
@@ -157,8 +183,9 @@ class Fornecedor:
         if packet == -1:
             print("SERVIDOR FORA DO AR")
             return -1
-        print(packet)
         a = from_json(packet)
+
+        return a['args']
 
     def RemoveFornecedor(self,req):
         packet = do_operation(req,"Fornecedor","RemoveFornecedor",self.__dict__)
@@ -183,3 +210,61 @@ def ListaFornecedor(req):
             lista = json.loads(a['args'])
             for objeto in lista:
                 imprimir_fornecedor(objeto)
+
+def BuscaProduto(nome,req):
+    arg={}
+    arg['nome'] = nome
+    packet = do_operation(req,"Venda","BuscaEstoque",arg)
+    return packet
+
+                
+def RealizarVenda(req):
+    nome_p = input("Produto(não precisa ser o nome todo): ")
+    packet = BuscaProduto(nome_p,req) 
+    if packet == -1:
+        print("SERVIDOR FORA DO AR")
+    else:
+        a = from_json(packet)
+        if a['args'] == "-1":
+            print("Sentimos muito, mas Houve um problema \ncom o servidor, tente novamente")
+        elif a['args'] == "null":
+            print("Nenhum produto encontrado")
+        else:
+            lista = json.loads(a['args'])
+            for objeto in lista:
+                imprimir_sub_produto(objeto)
+            idp = input("ID do produto: ")
+            qtd = input("Quantidade: ")
+            di={}
+            di['id'] = idp
+            di['qtd'] = qtd
+            packet = do_operation(req,"Venda","RealizaVenda",di)
+            if packet == -1:
+                print("SERVIDOR FORA DO AR")
+            else:
+                a = from_json(packet)
+                if a['args'] == "-1":
+                    print("Sentimos muito, mas Houve um problema \ncom o servidor, tente novamente")
+                elif a['args'] == "0":
+                    print("Venda não realizada")
+                    print("Motivo: Estoque insuficiente")
+                elif a['args'] == "1":
+                    print("Venda não realizada")
+                    print("Motivo: Produto não encontrado")
+                elif a['args'] == "2":
+                    print("Venda realizada com sucesso")
+
+def ListaVenda(req):
+    packet = do_operation(req,"Venda","ListaVenda","")
+    if packet == -1:
+        print("SERVIDOR FORA DO AR")
+    else:
+        a = from_json(packet)
+        if a['args'] == "-1":
+            print("Sentimos muito, mas Houve um problema \ncom o servidor, tente novamente")
+        elif a['args'] == "null":
+            print("Nenhuma Venda realizada")
+        else:
+            lista = json.loads(a['args'])
+            for objeto in lista:
+                imprimir_vendas(objeto)

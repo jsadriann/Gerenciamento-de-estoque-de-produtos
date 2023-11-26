@@ -1,6 +1,8 @@
 import proxy as px
 import adm_app as adm
 import stock_app as stock
+import getpass
+import curses
 import os
 import sys
 import time
@@ -17,9 +19,9 @@ def main():
         limpar_terminal()
         while True:
             menu_login()
-            user = input("User >> ")
+            user = input("User: ")
             user_atual = user
-            password = input("Password >> ")
+            password = getpass.getpass("Senha: ")
             login = px.Login(user,password)
             next = login.efetua_login(increment())
             if next == "0":
@@ -37,24 +39,18 @@ def main():
             menu_inicial(user_atual)
             opc = input(">> ")
             
-            if opc == "1":
+            if opc == "0":
                 adm.exec()
-                # limpar_terminal()
-                # menu_admin()
-                # opc = input(">> ")
-                # if opc == "1":
-                #     user = input("User >> ")
-                #     password = input("Password >> ")
-                #     px.add_Login(user,password,incrementar_contador())
-                # elif opc == "2":
-                #     user = input("User >> ")
-                #     px.remove_Login(user,incrementar_contador())
-            elif opc == "2":
+            elif opc == "1":
                 stock.exec()
-            elif opc == "3":
+            elif opc == "2":
                 break
-            elif opc == "4":
+            elif opc == "3":
                 sys.exit()
+            else:
+                print("Opção inválida")
+                time.sleep(1)
+                limpar_terminal()
 
 
         

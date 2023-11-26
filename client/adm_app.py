@@ -8,18 +8,20 @@ from global_counter import cont, increment
 
 def exec():
     opc = -1
-    while opc != "3":
+    while opc != "2":
         limpar_terminal()
         menu_admin()
         opc = input(">> ")
-        if opc == "1":
+        if opc == "0":
             user = input("User >> ")
             password = input("Password >> ")
             px.add_Login(user,password,increment())
-        elif opc == "2":
+        elif opc == "1":
             user = input("User >> ")
             px.remove_Login(user,increment())
-        elif opc == "3":
+        elif opc == "2":
             break
-        time.sleep(3)
+        else:
+            print("Opção inválida")
+        time.sleep(2)
 

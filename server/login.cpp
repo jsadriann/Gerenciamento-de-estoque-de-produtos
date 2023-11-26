@@ -28,13 +28,23 @@ void Login::setSenha(string senha){
 }
 
 int Login::verificaLogin(){
+    cout << "RUN(): VerificaLogin()"<<endl;
     int ret;
     PGconn *database = connectDB();
     string aux = "SELECT * FROM Login where users='"+getLogin()+"'";
     const char *query = aux.c_str();
     PGresult *result = consultDB(database,query);
-    if(countTupleDB(result) == 0)
+
+    if(countTupleDB(result) == 0){
         return 2;
+    }
+
+    if (PQresultStatus(result) != PGRES_TUPLES_OK) {
+        PQclear(result);
+        PQfinish(database);
+        throw::runtime_error("not acess database");
+    }
+
     string a = getValueDB(result,0,"users");
     string b = getValueDB(result,0,"password");
     
@@ -50,6 +60,7 @@ int Login::verificaLogin(){
 }
 
 int add_login(string user,string password){
+    cout << "RUN(): AdicionaLogin()"<<endl;
     PGconn *database = connectDB();
     string aux = "INSERT INTO login(users,password) VALUES('"+user+"',"+"'"+password+"')";
     const char *query = aux.c_str();
@@ -66,6 +77,7 @@ int add_login(string user,string password){
 }
 
 int remove_login(string user){
+    cout << "RUN(): RemoveLogin()"<<endl;
     PGconn *database = connectDB();
     string aux = "DELETE FROM login WHERE users ='"+user+"'";
     const char *query = aux.c_str();

@@ -29,42 +29,30 @@ void Fornecedor::setNome(string nome){
 }
 
 int Fornecedor::AdicionaFornecedor(){
+    cout << "RUN(): AdicionaFornecedor()"<<endl;
     PGconn *database = connectDB();
     string aux = "INSERT INTO fornecedor(nome) VALUES('"+nome+"')";
+    cout << "RUN(): "<< aux;
     const char *query = aux.c_str();
     PGresult *result = consultDB(database,query);
     if (PQresultStatus(result) != PGRES_COMMAND_OK) {
         PQclear(result);
         PQfinish(database);
+        cout <<" --> ERROR"<<endl;
         return -1;
     }
-
-    // if (PQresultStatus(result) == PGRES_FATAL_ERROR) {
-    // // Um erro fatal ocorreu. Verifique o código de status para obter detalhes específicos.
-    //     const char *errorStatus = PQresultErrorField(result, PG_DIAG_SQLSTATE);
-
-    //     if (strcmp(errorStatus, "23505") == 0) {
-    //         // Violou uma restrição única (código SQLSTATE 23505).
-    //         // Lide com isso conforme necessário.
-    //         return 0;
-    //     }
-    // }
+    cout <<" --> SUCESS"<<endl;
     PQclear(result);
     PQfinish(database);
     return 1;
 }
 
 int Fornecedor::RemoveFornecedor(string nome){
+    cout << "RUN(): RemoveFornecedor()"<<endl;
     PGconn *database = connectDB();
     string aux = "DELETE FROM fornecedor WHERE nome='"+getNome()+"'";
-    cout<<aux<<endl;
     const char *query = aux.c_str();
     PGresult *result = consultDB(database,query);
-    // if (PQresultStatus(result) != PGRES_TUPLES_OK) {
-    //     PQclear(result);
-    //     PQfinish(database);
-    //     return -1;
-    // }
     if (atoi(PQcmdTuples(result)) == 0){
         PQclear(result);
         PQfinish(database);
@@ -109,6 +97,7 @@ void Fornecedor::from_json(json& j, Fornecedor& forn){
 }
 
 string ListaFornecedorSelialize(vector<Fornecedor> forn){
+    cout << "RUN(): ListaFornecedor()"<<endl;
     json j;
     for ( auto& item : forn) {
         j.push_back(item.to_json());

@@ -8,7 +8,7 @@ int package_id(string pacote){
 }
 
 std::string do_operation(std::string pacote,int idr){
-    std::cout << pacote << std::endl;
+    cout << "Package_in: "<<pacote << endl;
     json received_json = json::parse(pacote);
     std::string args = received_json["args"];
     std::string objref = received_json["objref"];
@@ -20,13 +20,12 @@ std::string do_operation(std::string pacote,int idr){
     }else if(objref.compare("Estoque")==0){
         packet = skeletonProduto(args,operation,idr);
     }else if(objref.compare("Venda")==0){
-
+        packet = skeletonVendas(args,operation,idr);
     }else if(objref.compare("Fornecedor")==0){
-        cout<<"forn"<<endl;
         packet = skeletonFornecedor(args,operation,idr);
     }
 
-    std::cout << packet << std::endl;
+    cout << "Package_out: "<< packet << std::endl;
     return packet;
 
 }

@@ -83,19 +83,20 @@ int Estoque::AlteraFornecedor(string fornecedor){
 }
 
 int Estoque::AdicionaProduto(){
+    cout << "RUN(): AdicionaProduto()"<<endl;
     PGconn *database = connectDB();
     string aux = "SELECT * FROM fornecedor WHERE nome='"+getFornecedor()+ "'";
-
     const char *query1 = aux.c_str();
     PGresult *result = consultDB(database,query1);
-    if(countTupleDB(result) == 0){
+
+    if (countTupleDB(result) == 0){
         PQclear(result);
         PQfinish(database);
-        return 0;
+        return -1;
     }
     string a = getValueDB(result,0,"id");
 
-    //PQclear(result);
+    PQclear(result);
     aux = "INSERT INTO produto(nome,descricao,data_fab,data_val,fornecedor_id,quantidade,valor) VALUES('"+name+"',"+"'"+description+"',"+"'"+datafab+"',"+"'"+dataval+"',"+"'"+a+"',"+"'"+to_string(qtd)+"',"+"'"+to_string(value)+"')";
     const char *query = aux.c_str();
     result = consultDB(database,query);
@@ -109,9 +110,9 @@ int Estoque::AdicionaProduto(){
     return 1;
 }
 
-vector<Estoque> Estoque::ListaEstoque(){
+vector<Estoque> Estoque::ListaEstoque(string busca){
     PGconn *database = connectDB();
-    string aux = "SELECT * FROM produto";
+    string aux = "SELECT * FROM produto WHERE nome ILIKE '%"+busca+"%'";
     const char *query = aux.c_str();
     PGresult *result = consultDB(database,query);
     if (PQresultStatus(result) != PGRES_TUPLES_OK) {
@@ -119,13 +120,14 @@ vector<Estoque> Estoque::ListaEstoque(){
         PQfinish(database);
         throw::runtime_error("error");
     }
+
     vector<Estoque> estoque;
     int numRows = PQntuples(result);
     for(int row = 0; row < numRows; row++){
         string t = getValueDB(result,row,"fornecedor_id");
-        cout << t << endl;
         string aux1 = "SELECT * FROM fornecedor where id='"+t+"'";
         const char *query1 = aux1.c_str();
+
         PGresult *result1 = consultDB(database,query1);
         if(countTupleDB(result1) == 0){
             PQclear(result1);
@@ -143,6 +145,7 @@ vector<Estoque> Estoque::ListaEstoque(){
 }
 
 string ListaEstoqueSelialize(vector<Estoque> estoque){
+    cout << "RUN(): ListaEstoque()"<<endl;
     json j;
     for ( auto& item : estoque) {
         j.push_back(item.to_json());

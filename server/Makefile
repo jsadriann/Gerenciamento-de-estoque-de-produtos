@@ -14,7 +14,7 @@ BUILD_DIR = build
 TARGET = server
 
 # Lista de todos os arquivos-fonte
-SRCS = server.cpp despaxante.cpp skeleton.cpp message.cpp login.cpp fornecedor.cpp database.cpp produto.cpp
+SRCS = server.cpp client.cpp despaxante.cpp skeleton.cpp message.cpp login.cpp fornecedor.cpp database.cpp produto.cpp vendas.cpp
 
 # Gere os nomes dos arquivos-objetos
 OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRCS))
